@@ -1,14 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FaRegClock } from "react-icons/fa";
 import { BsFillStarFill } from "react-icons/bs";
 import { ImStarHalf } from "react-icons/im";
-import FormModal from './FormModal';
+import FormModal from "./FormModal";
 
-// Forwarding ref to the Course component
 const Course = React.forwardRef((props, ref) => {
+  const [courses, setCourses] = useState([]); // Ensure courses is an array
   const [showModal, setShowModal] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState("");
+
+  // Fetch courses when the component mounts
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/course/");
+
+        // Check if the response contains the correct data structure
+        if (response.data && Array.isArray(response.data.data)) {
+          setCourses(response.data.data); // Set the array of courses correctly
+        } else {
+          console.error("Unexpected data structure:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   // Show Modal on Register Now Click
   const handleRegisterClick = (courseName) => {
@@ -33,88 +54,87 @@ const Course = React.forwardRef((props, ref) => {
         </p>
       </div>
 
-      {/* Course Card 1 */}
-      <div className="outer-container" data-aos="fade-up">
-        <div className="col-lg-4 col-md-6 mb-4 card">
-          <div className="rounded overflow-hidden mb-2">
-            <img className="img-fluid image" src="img/python-training-institute.webp" alt="Python Basic" />
-            <div className="p-4 pb-0">
-              <div className="d-flex justify-content-between mb-3">
-                <small className="m-0">
-                  <BsFillPeopleFill /> 100+ students
-                </small>
-                <small className="m-0">
-                  <FaRegClock className='clock' /> 20 days
-                </small>
-              </div>
-              <a href="#" className="h5">Python Basic</a>
-              <div className="border-top mt-2 pt-4">
-                <div className="d-flex justify-content-between">
-                  <h6 className="m-0">
-                    <div className="stars">
-                      <BsFillStarFill />
-                      <BsFillStarFill />
-                      <BsFillStarFill />
-                      <BsFillStarFill />
-                      <ImStarHalf />
+      {/* Render courses dynamically */}
+      <div className="outer-container courses" data-aos="fade-up">
+        {Array.isArray(courses) && courses.length > 0 ? (
+          courses.map((course) => (
+            <div className="col-lg-4 col-md-6 mb-4 card" key={course.courseId}>
+              <div className="rounded overflow-hidden mb-2">
+                <img
+                  className="img-fluid image"
+                  src={course.imageString}
+                  alt={course.name}
+                />
+                <div className="p-4 pb-0">
+                  <div className="d-flex justify-content-between mb-3">
+                    <small className="m-0">
+                      <BsFillPeopleFill /> 100+
+                      students
+                    </small>
+                    <small className="m-0">
+                      <FaRegClock className="clock" /> {course.duration}
+                    </small>
+                  </div>
+                  <a href="#" className="h5">
+                    {course.name}
+                  </a>
+                  <p>{course.description}</p>
+                  <div className="border-top mt-2 pt-4">
+                    <div className="d-flex justify-content-between">
+                      <h6 className="m-0">
+                        <div className="stars">
+                          {course.rating ? (
+                            <>
+                              {/* Ensure the rating is a valid number and generate the star icons */}
+                              {Array(Math.floor(course.rating))
+                                .fill()
+                                .map((_, i) => (
+                                  <BsFillStarFill key={i} />
+                                ))}
+                              {/* Add half star if the rating is not a whole number */}
+                              {course.rating % 1 !== 0 && <ImStarHalf />}
+                            </>
+                          ) : (
+                            <p>No rating available</p>
+                          )}
+                        </div>
+                        {course.rating || 0}{" "}
+                      </h6>
+                      <h5 className="m-0">₹{course.cost}</h5>
                     </div>
-                    4.5 <small>(90)</small>
-                  </h6>
-                  <h5 className="m-0">₹499</h5>
-                </div>
-              </div>
-              <div className="card-button">
-                <button className="card-button1" id="button2">View Content</button>
-                <button className="card-join" id="button" onClick={() => handleRegisterClick('Python Basic')}>
-                  Register Now
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+                  </div>
+                  <div className="card-button">
+                    <button
+                      className="card-button1"
+                      id="button2"
+                      onClick={() => window.open(course.pdfUrl, "_blank")} // Opens the PDF link in a new tab
+                    >
+                      View Content
+                    </button>
 
-        {/* Course Card 2 */}
-        <div className="col-lg-4 col-md-6 mb-4 card">
-          <div className="rounded overflow-hidden mb-2">
-            <img className="img-fluid image" src="img/python-training-institute.webp" alt="Python Advance" />
-            <div className="p-4 pb-0">
-              <div className="d-flex justify-content-between mb-3">
-                <small className="m-0">
-                  <BsFillPeopleFill /> 100+ students
-                </small>
-                <small className="m-0">
-                  <FaRegClock className='clock' /> 30 days
-                </small>
-              </div>
-              <a href="#" className="h5">Python Advance</a>
-              <div className="border-top mt-2 pt-4">
-                <div className="d-flex justify-content-between">
-                  <h6 className="m-0">
-                    <div className="stars">
-                      <BsFillStarFill />
-                      <BsFillStarFill />
-                      <BsFillStarFill />
-                      <BsFillStarFill />
-                      <ImStarHalf />
-                    </div>
-                    4.5 <small>(90)</small>
-                  </h6>
-                  <h5 className="m-0">₹999</h5>
+                    <button
+                      className="card-join"
+                      id="button"
+                      onClick={() => handleRegisterClick(course.name)}
+                    >
+                      Register Now
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div className="card-button">
-                <button className="card-button1" id="button1">View Content</button>
-                <button className="card-join" id="button" onClick={() => handleRegisterClick('Python Advance')}>
-                  Register Now
-                </button>
-              </div>
             </div>
-          </div>
-        </div>
+          ))
+        ) : (
+          <p>Loading courses...</p>
+        )}
       </div>
 
       {/* Modal Component */}
-      <FormModal show={showModal} onClose={handleCloseModal} course={selectedCourse} />
+      <FormModal
+        show={showModal}
+        onClose={handleCloseModal}
+        course={selectedCourse}
+      />
     </section>
   );
 });

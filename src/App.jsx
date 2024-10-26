@@ -16,6 +16,8 @@ import { BsHddStack, BsEnvelope } from "react-icons/bs";
 import { HiOutlineBars3 } from "react-icons/hi2";
 
 import { HiOutlineX } from "react-icons/hi";// Added HiOutlineX for close icon
+import UserAuth from './components/UserAuth'; 
+
 
 function App() {
   const hero = useRef();
@@ -27,6 +29,11 @@ function App() {
 
   const [headerShown, setHeaderShown] = useState(false);
   const [activeSection, setActiveSection] = useState('hero'); 
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const handleLoginOpen = () => setShowLoginModal(true);
+  const handleLoginClose = () => setShowLoginModal(false);
 
   const scrollToComponent = (ref) => {
     ref.current.scrollIntoView({ behavior: 'smooth' });
@@ -152,9 +159,11 @@ function App() {
           </ul>
         </nav>
       </header>
-
+      
+     
       <main className="main">
         {/* Main content */}
+        <UserAuth/>
         <Hero ref={hero}></Hero>
         <About ref={about}></About>
         <Course ref={course}></Course>

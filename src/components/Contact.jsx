@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 
-// Forwarding ref to the Contact component
 const Contact = React.forwardRef((props, ref) => {
   // Form state
   const [formData, setFormData] = useState({
@@ -22,24 +22,34 @@ const Contact = React.forwardRef((props, ref) => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const apiUrl = 'http://localhost:5000';
 
-    // Simulate sending data to a backend
-    setTimeout(() => {
+    try {
+      // Make API request to save contact data
+      const response = await axios.post(`${apiUrl}/api/contact`, formData);
+
+      // Handle success
+      if (response.status === 200 || response.status === 201) {
+        setSuccess('Your message has been sent. Thank you!');
+        setError('');
+        // Reset form data after successful submission
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      }
+    } catch (err) {
+      // Handle error
+      setError('An error occurred. Please try again.');
+      setSuccess('');
+    } finally {
       setLoading(false);
-      setSuccess('Your message has been sent. Thank you!');
-      setError('');
-
-      // Reset form after successful submission
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      });
-    }, 1500);
+    }
   };
 
   return (

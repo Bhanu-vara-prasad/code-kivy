@@ -39,8 +39,7 @@
 /* Modal container */
 .modal {
   display: none; /* Hidden by default */
-  position: fixed; 
-  z-index: 1; 
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%; 
@@ -70,6 +69,11 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+.login-btn{
+  
+
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
@@ -1033,6 +1037,10 @@ section,
 
 .services .service-item.item-pink:hover .icon path {
   fill: #f3268c;
+}
+
+.courses .stars{
+  margin-bottom:3px;
 }
 
 /*--------------------------------------------------------------
