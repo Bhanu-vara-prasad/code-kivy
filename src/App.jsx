@@ -90,10 +90,11 @@ function App() {
       <Preloader />
 
       <header id="header" className={`header d-flex flex-column justify-content-center ${headerShown ? 'header-show' : ''}`}>
-        <i className={`header-toggle d-xl-none`} onClick={toggleHeader}>
+        <i className={`header-toggle d-xl-none `} onClick={toggleHeader}>
           {headerShown ? <HiOutlineX /> : <HiOutlineBars3 />}  {/* Toggle between open and close icon */}
+          
         </i>
-
+        <UserAuth/>
         <nav id="navmenu" className="navmenu">
           <ul>
             <li>
@@ -163,7 +164,6 @@ function App() {
      
       <main className="main">
         {/* Main content */}
-        <UserAuth/>
         <Hero ref={hero}></Hero>
         <About ref={about}></About>
         <Course ref={course}></Course>
@@ -171,7 +171,6 @@ function App() {
         <Testimonials ref={review}></Testimonials>  {/* Reviews Section */}
         <Contact ref={contact}></Contact>
         <Footer></Footer>
-
         <ScrollToTop />
       </main>
     </>

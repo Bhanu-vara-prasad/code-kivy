@@ -36,6 +36,74 @@
   --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
 }
 
+/* Dropdown styling */
+
+.user-auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  right:20px;
+  gap: 1rem;
+  padding-right: 1rem;
+}
+
+.user-icon-dropdown {
+  background-color: var(--background-color);
+  color: var(--default-color);
+  border: none;
+}
+
+.dropdown-menu {
+  background-color: var(--surface-color);
+  color: var(--default-color);
+  min-width: 200px;
+  font-size: 0.9rem;
+}
+
+.dropdown-item.disabled {
+  color: var(--default-color);
+}
+
+.dropdown-item.text-danger {
+  color: #dc3545;
+}
+
+.login-button {
+  background-color: var(--accent-color);
+  border: none;
+  color: var(--contrast-color);
+}
+
+.login-button:hover,.login-button:active{
+  background-color: #ffc107 !important;
+}
+
+/* Toast Notification Styling */
+.toast-container .toast {
+  background-color: var(--surface-color);
+  color: var(--default-color);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.toast-container .toast .toast-body {
+  font-weight: bold;
+  color: var(--heading-color);
+}
+
+/* Logout Confirmation Modal */
+.modal-header, .modal-footer {
+  border: none;
+}
+
+.modal-content {
+  background-color: var(--background-color);
+}
+
+.modal-title {
+  color: var(--heading-color);
+}
+
+
 /* Modal container */
 .modal {
   display: none; /* Hidden by default */
@@ -71,10 +139,6 @@
   cursor: pointer;
 }
 
-.login-btn{
-  
-
-}
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
@@ -210,6 +274,7 @@ h6 {
     border-right: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
     width: 300px;
     left: -100%;
+    min-width:unset;
   }
 }
 
@@ -251,12 +316,30 @@ h6 {
   background-color: color-mix(in srgb, var(--accent-color) 90%, white 15%);
 }
 
+
+.auth-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: fixed;
+  top: 15px;
+  right: 70px; /* Positioned near the toggle button */
+  z-index: 9998;
+}
+
+@media (max-width: 992px) {
+  .auth-toggle-container {
+    right: 70px;
+  }
+
+}
 /*--------------------------------------------------------------
 # Navigation Menu
 --------------------------------------------------------------*/
 .navmenu {
   padding: 0;
   z-index: 9997;
+  margin-top: 80px;
 }
 
 .navmenu ul {

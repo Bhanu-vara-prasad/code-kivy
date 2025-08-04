@@ -5,21 +5,28 @@ import { FaRegClock } from "react-icons/fa";
 import { BsFillStarFill } from "react-icons/bs";
 import { ImStarHalf } from "react-icons/im";
 import FormModal from "./FormModal";
+import LoginModal from "./LoginModal"; // Import the Login Modal
 
 const Course = React.forwardRef((props, ref) => {
   const [courses, setCourses] = useState([]); // Ensure courses is an array
-  const [showModal, setShowModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false); // Controls the registration modal
+  const [showLoginModal, setShowLoginModal] = useState(false); // Controls the login modal
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [user, setUser] = useState(null); // Store user information
+
+  // Fetch user details from localStorage to check login status
+  useEffect(() => {
+    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    setUser(userDetails); // Set user state if logged in
+  }, []);
 
   // Fetch courses when the component mounts
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/course/");
-
-        // Check if the response contains the correct data structure
         if (response.data && Array.isArray(response.data.data)) {
-          setCourses(response.data.data); // Set the array of courses correctly
+          setCourses(response.data.data);
         } else {
           console.error("Unexpected data structure:", response.data);
         }
@@ -31,15 +38,30 @@ const Course = React.forwardRef((props, ref) => {
     fetchCourses();
   }, []);
 
-  // Show Modal on Register Now Click
+  // Show Registration Modal or Login Modal based on login status
   const handleRegisterClick = (courseName) => {
-    setSelectedCourse(courseName);
-    setShowModal(true);
+    if (user) {
+      setSelectedCourse(courseName); // Set the selected course
+      setShowRegisterModal(true); // Show the registration modal
+    } else {
+      setShowLoginModal(true); // Show the login modal if not logged in
+    }
   };
 
-  // Close Modal
-  const handleCloseModal = () => {
-    setShowModal(false);
+  // Close Registration Modal
+  const handleCloseRegisterModal = () => {
+    setShowRegisterModal(false);
+  };
+
+  // Close Login Modal
+  const handleCloseLoginModal = () => {
+    setShowLoginModal(false);
+  };
+
+  // Handle login success
+  const handleLoginSuccess = (userDetails) => {
+    setUser(userDetails); // Set user details after login
+    setShowLoginModal(false); // Close the login modal
   };
 
   return (
@@ -68,8 +90,7 @@ const Course = React.forwardRef((props, ref) => {
                 <div className="p-4 pb-0">
                   <div className="d-flex justify-content-between mb-3">
                     <small className="m-0">
-                      <BsFillPeopleFill /> 100+
-                      students
+                      <BsFillPeopleFill /> 100+ students
                     </small>
                     <small className="m-0">
                       <FaRegClock className="clock" /> {course.duration}
@@ -85,13 +106,11 @@ const Course = React.forwardRef((props, ref) => {
                         <div className="stars">
                           {course.rating ? (
                             <>
-                              {/* Ensure the rating is a valid number and generate the star icons */}
                               {Array(Math.floor(course.rating))
                                 .fill()
                                 .map((_, i) => (
                                   <BsFillStarFill key={i} />
                                 ))}
-                              {/* Add half star if the rating is not a whole number */}
                               {course.rating % 1 !== 0 && <ImStarHalf />}
                             </>
                           ) : (
@@ -107,7 +126,7 @@ const Course = React.forwardRef((props, ref) => {
                     <button
                       className="card-button1"
                       id="button2"
-                      onClick={() => window.open(course.pdfUrl, "_blank")} // Opens the PDF link in a new tab
+                      onClick={() => window.open(course.pdfUrl, "_blank")}
                     >
                       View Content
                     </button>
@@ -129,11 +148,19 @@ const Course = React.forwardRef((props, ref) => {
         )}
       </div>
 
-      {/* Modal Component */}
+      {/* Registration Modal */}
       <FormModal
-        show={showModal}
-        onClose={handleCloseModal}
+        show={showRegisterModal}
+        onClose={handleCloseRegisterModal}
         course={selectedCourse}
+      />
+
+      {/* Login Modal */}
+      <LoginModal
+        show={showLoginModal}
+        handleClose={handleCloseLoginModal}
+        onLoginSuccess={handleLoginSuccess}
+        message="Please login to register for the course."
       />
     </section>
   );
