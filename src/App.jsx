@@ -16,6 +16,8 @@ import { BsHddStack, BsEnvelope } from "react-icons/bs";
 import { HiOutlineBars3 } from "react-icons/hi2";
 
 import { HiOutlineX } from "react-icons/hi";// Added HiOutlineX for close icon
+import UserAuth from './components/UserAuth'; 
+
 
 function App() {
   const hero = useRef();
@@ -27,6 +29,11 @@ function App() {
 
   const [headerShown, setHeaderShown] = useState(false);
   const [activeSection, setActiveSection] = useState('hero'); 
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const handleLoginOpen = () => setShowLoginModal(true);
+  const handleLoginClose = () => setShowLoginModal(false);
 
   const scrollToComponent = (ref) => {
     ref.current.scrollIntoView({ behavior: 'smooth' });
@@ -83,10 +90,11 @@ function App() {
       <Preloader />
 
       <header id="header" className={`header d-flex flex-column justify-content-center ${headerShown ? 'header-show' : ''}`}>
-        <i className={`header-toggle d-xl-none`} onClick={toggleHeader}>
+        <i className={`header-toggle d-xl-none `} onClick={toggleHeader}>
           {headerShown ? <HiOutlineX /> : <HiOutlineBars3 />}  {/* Toggle between open and close icon */}
+          
         </i>
-
+        <UserAuth/>
         <nav id="navmenu" className="navmenu">
           <ul>
             <li>
@@ -152,7 +160,8 @@ function App() {
           </ul>
         </nav>
       </header>
-
+      
+     
       <main className="main">
         {/* Main content */}
         <Hero ref={hero}></Hero>
@@ -162,7 +171,6 @@ function App() {
         <Testimonials ref={review}></Testimonials>  {/* Reviews Section */}
         <Contact ref={contact}></Contact>
         <Footer></Footer>
-
         <ScrollToTop />
       </main>
     </>
